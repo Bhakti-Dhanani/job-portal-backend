@@ -15,7 +15,7 @@ router.get("/getUsers", async (req, res) => {
         const users = await User.find().select("-password");
         res.json(users);
     } catch (err) {
-        res.status(500).json({ message: err.message,  error: err.message });
+        res.status(500).json({ message: err.messag});
     }
 });
 
