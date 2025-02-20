@@ -44,12 +44,23 @@ const userLogin =async (req, res) => {
 
         // Compare Passwords
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: "Invalid Credentials" });
+        if (!isMatch) return res.status(400).json({ message: "Invalid Credentials",
+            data: {
+                name: user.name,
+                role: user.role,
+                email: user.email,
+            }
+         });
 
         // Generate Token
         const token = jwt.sign({ user_id: user.user_id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-        res.json({ message: "Login Successful", token });
+         res.json({ message: "Login Successful", 
+            data: {
+            name: user.name,
+            role: user.role,
+            email: user.email,
+          },token });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
