@@ -3,7 +3,7 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const JobPostSchema = new mongoose.Schema(
     {
-        job_id: { type: Number, unique: true }, // Auto-incremented ID
+        job_id: { type: Number, unique: true }, // Auto-incremented IDgit 
         recruiter_id: { 
             type: Number, 
             required: true, 
