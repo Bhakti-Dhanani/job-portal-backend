@@ -1,14 +1,11 @@
-const express = require("express");
-<<<<<<< HEAD
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-const router = express.Router();
 
-// REGISTER USER
-router.post("/register", async (req, res) => {
+const userRegistration = async (req, res) => {
     try {
+        console.log("Received Request Body:", req.body); 
         const { name, email, password, role } = req.body;
 
         // Check if email already exists
@@ -23,14 +20,21 @@ router.post("/register", async (req, res) => {
         user = new User({ name, email, password: hashedPassword, role });
         await user.save();
 
-        res.status(201).json({ message: "User Registered Successfully", user });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
+        // Remove password from response for security
+        const { password: _, ...userData } = user.toObject();
 
-// LOGIN USER
-router.post("/login", async (req, res) => {
+        return res.status(201).json({
+            message: "User Registered Successfully",
+            user: userData,
+        });
+
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
+
+const userLogin =async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -45,35 +49,11 @@ router.post("/login", async (req, res) => {
         // Generate Token
         const token = jwt.sign({ user_id: user.user_id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-        res.json({ message: "Login Successful",role: user.role, token });
+        res.json({ message: "Login Successful", token });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
-});
+}
 
-// GET ALL USERS (Protected)
-router.get("/users", async (req, res) => {
-=======
-const User = require("../models/user");
-const {userRegistration,userLogin} = require("../controllers/user.controller");
-const router = express.Router();
-// const userLogin = require("../controllers/user.controller");
-
-// REGISTER USER
-router.post("/register" , userRegistration);
-
-// LOGIN USER
-router.post("/login", userLogin);
-
-// GET ALL USERS (Protected)
-router.get("/getUsers", async (req, res) => {
->>>>>>> authapimodule
-    try {
-        const users = await User.find().select("-password");
-        res.json(users);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
-module.exports = router;
+// module.exports = ;
+module.exports = {userLogin,userRegistration};
