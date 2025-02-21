@@ -10,7 +10,7 @@ const userRegistration = async (req, res) => {
 
         // Check if email already exists
         let user = await User.findOne({ email });
-        if (user) return res.status(400).json({ message: "Email already exists" });
+        if (user) return res.status(401).json({ message: "Email already exists" });
 
         // Hash Password
         const salt = await bcrypt.genSalt(10);
@@ -40,11 +40,11 @@ const userLogin =async (req, res) => {
 
         // Check if user exists
         const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ message: "Invalid Credentials" });
+        if (!user) return res.status(401).json({ message: "Invalid Credentials" });
 
         // Compare Passwords
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: "Invalid Credentials",
+        if (!isMatch) return res.status(401).json({ message: "Invalid Credentials",
             data: {
                 name: user.name,
                 role: user.role,
@@ -53,7 +53,7 @@ const userLogin =async (req, res) => {
          });
 
         // Generate Token
-        const token = jwt.sign({ user_id: user.user_id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ user_id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
          res.json({ message: "Login Successful", 
             data: {
