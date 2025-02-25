@@ -5,6 +5,8 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 
+
+
 dotenv.config();
 connectDB();
 
@@ -13,7 +15,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/users", userRoutes);
-app.use("/api/resume", uploadRoutes); 
+app.use("/api/resumes", uploadRoutes);
+
 
 app.get("/", (req, res) => {
   res.send("API is running successfully ....");

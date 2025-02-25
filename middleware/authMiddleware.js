@@ -6,7 +6,7 @@ const authMiddleware = (req, res, next) => {
 
     try {
         const verified = jwt.verify(token, process.env.JWT_SECRET); // Extract token correctly
-        req.user = { user_id: verified.user_id }; // Ensure user ID is stored correctly
+        req.user = verified;// Ensure user ID is stored correctly
         console.log("rq users",req.user);
         next();
     } catch (err) {
