@@ -4,6 +4,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
+const jobRoutes = require("./routes/jobRoutes");
 
 dotenv.config();
 connectDB();
@@ -13,7 +14,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/users", userRoutes);
-app.use("/api/resume", uploadRoutes); 
+app.use("/api/resume", uploadRoutes);
+app.use("/api/jobs", jobRoutes); 
 
 app.get("/", (req, res) => {
   res.send("API is running successfully ....");

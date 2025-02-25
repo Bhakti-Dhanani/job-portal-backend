@@ -109,10 +109,10 @@ const userLogin =async (req, res) => {
         // Check if user exists
         const user = await User.findOne({ email });
         if (!user) return res.status(401).json({ message: "Invalid Credentials" });
-
-        if (!user.isVerified) {
-            return res.status(403).json({ message: "Please verify your email before logging in." });
-        }
+        console.log("isVerified",user.isVerified);
+        // if (!user.isVerified) {
+        //     return res.status(403).json({ message: "Please verify your email before logging in." });
+        // }
 
         // Compare Passwords
         const isMatch = await bcrypt.compare(password, user.password);

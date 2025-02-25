@@ -3,41 +3,63 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const JobPostSchema = new mongoose.Schema(
     {
-       //// Auto-incremented IDgit
+        // Auto-incremented ID
         recruiter_id: { 
-            type: Number, 
+            type: mongoose.Schema.Types.ObjectId, 
             required: true, 
-            ref: "users"  // Reference to Users table
+            ref: "users"  
         },
-       
-        job_title: { type: String,  },
-        description: { type: String,  },
-        recruiter_name: { type: String, required: true, ref:"users" },
-        company_name: { type: String, },// intern ,full-time, freelancer,part-time
-        employee_role: { type: String,
-             
-             enum: ["Intern", "Full-time", "Freelancer", "Part-time"]
-         },// intern ,full-time, freelancer,part-time
-        location: { type: String,},
-        skills: { type: String,}, 
-        salary_range: { type: String, },
-        job_type: { type: String,
-             required: true,
-             enum: ["Remote", "On-site", "Hybrid"] }, // e.g.,remote, on-site
-        qualification: { type: String,  },// e.g. BE-IT,master in IT...
-        posted_date: { type: Date, default: Date.now }, // Default: current date
-        responsibility: { type: String, },
-        experience: { type: String, 
-            
-            enum:["Internship","Senior-level","Mid-level","Entry-level"] },
-        expire_date: { type: Date, }// expire date 
-    },
-    { timestamps: true
+        recruiter_name: { type: String, required: true },
 
-     }
+        job_title: { type: String, required: true },
+        description: { type: String, required: true },
+        
+        company_name: { type: String, required: true },
+        company_details: { type: String, required: true },
+
+        employee_role: { 
+            type: String, 
+            enum: ["Intern", "Full-time", "Freelancer", "Part-time"], 
+            required: true 
+        },
+
+        location: { type: String, required: true },
+        skills: { type: [String], required: true }, 
+
+        salary_range: { 
+            type: {
+                min: { type: Number, required: true }, 
+                max: { type: Number, required: true },
+                currency: { type: String, required: true, default: "LPA" }
+            }, 
+            required: true 
+        },
+
+
+        job_type: { 
+            type: String, 
+            required: true, 
+            enum: ["Remote", "On-site", "Hybrid"] 
+        },
+
+        vacancy: { type: Number, default: 1 },
+
+        qualification: { type: String, required: true },
+
+        posted_date: { type: Date, default: Date.now },
+        expire_date: { type: Date },
+
+        responsibility: { type: String, required: true },
+        experience: { 
+            type: String,
+            match: /^\d+(\s*-\s*\d+|\+)?\s*years$/, 
+            required: true 
+        }
+    },
+    { timestamps: true }
 );
 
 // Auto-increment job_id
 JobPostSchema.plugin(AutoIncrement, { inc_field: "job_id" });
 
-module.exports = mongoose.model("jobpost", JobPostSchema);
+module.exports = mongoose.model("JobPost", JobPostSchema);
